@@ -52,7 +52,7 @@ class NewsCubit extends Cubit<NewsStates> {
       query: {
         'country': 'us',
         'category': 'business',
-        'apiKey': '5176fe15f1ef4db2bc82ef83856e99c1',
+        'apiKey': '0c767415499d42fba579bd81482ad3e8',
       },
     ).then((value) {
       business = value.data['articles'];
@@ -74,11 +74,11 @@ class NewsCubit extends Cubit<NewsStates> {
         query: {
           'country': 'us',
           'category': 'sports',
-          'apiKey': '5176fe15f1ef4db2bc82ef83856e99c1',
+          'apiKey': '0c767415499d42fba579bd81482ad3e8',
         },
       ).then((value) {
         sports = value.data['articles'];
-        debugPrint(business[0]['title']);
+        debugPrint(sports[0]['title']);
         emit(NewsGetSportsSuccessState());
       }).catchError((e) {
         debugPrint(e.toString());
@@ -99,11 +99,11 @@ class NewsCubit extends Cubit<NewsStates> {
         query: {
           'country': 'us',
           'category': 'science',
-          'apiKey': '5176fe15f1ef4db2bc82ef83856e99c1',
+          'apiKey': '0c767415499d42fba579bd81482ad3e8',
         },
       ).then((value) {
         science = value.data['articles'];
-        debugPrint(business[0]['title']);
+        debugPrint(science[0]['title']);
         emit(NewsGetScienceSuccessState());
       }).catchError((e) {
         debugPrint(e.toString());
@@ -121,7 +121,7 @@ class NewsCubit extends Cubit<NewsStates> {
       url: 'v2/everything',
       query: {
         'q': value,
-        'apiKey': '5176fe15f1ef4db2bc82ef83856e99c1',
+        'apiKey': '0c767415499d42fba579bd81482ad3e8',
       },
     ).then((value) {
       search = value.data['articles'];

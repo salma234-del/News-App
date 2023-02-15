@@ -4,10 +4,12 @@ import 'package:news_app/layout/cubit/cubit.dart';
 import 'package:news_app/layout/cubit/states.dart';
 import 'package:news_app/shared/components/componants.dart';
 
+// ignore: must_be_immutable
 class SearchScreen extends StatelessWidget {
-  //const SearchScreen({super.key});
 
   var searchCon = TextEditingController();
+
+  SearchScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<NewsCubit, NewsStates>(
@@ -36,7 +38,7 @@ class SearchScreen extends StatelessWidget {
                         cubit.getSearch(value);
                       }),
                 ),
-                Expanded(child: articleBuilder(cubit.search, context)),
+                Expanded(child: articleBuilder(cubit.search, context , search: true)),
               ],
             ),
           );

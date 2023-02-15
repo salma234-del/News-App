@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/layout/cubit/cubit.dart';
 import 'package:news_app/layout/news_layout.dart';
-import 'package:news_app/modules/web_view/web_view_screen.dart';
 import 'package:news_app/shared/bloc_observer.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/states.dart';
@@ -131,7 +130,7 @@ class MyApp extends StatelessWidget {
               ),
             ),
             themeMode: AppCubit.get(context).dark ? ThemeMode.dark : ThemeMode.light,
-            home:  NewsLayout(),
+            home: const NewsLayout(),
           );
         },
       ),

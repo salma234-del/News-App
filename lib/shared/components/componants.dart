@@ -1,52 +1,64 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-Widget buildArticleItem(article, context) => Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage('${article['urlToImage']}'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 15,
-          ),
-          Expanded(
-            child: Container(
+Future<void> _launchUrl(Uri url) async {
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
+  }
+}
+
+Widget buildArticleItem(article, context) => InkWell(
+      onTap: () {
+        _launchUrl(Uri.parse('${article['url']}'));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 120,
               height: 120,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      '${article['title']}',
-                      style: Theme.of(context).textTheme.bodyText1,
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    '${article['publishedAt']}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xffADC5CF),
-                    ),
-                  ),
-                ],
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  image: NetworkImage('${article['urlToImage']}'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-        ],
+            const SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 120,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${article['title']}',
+                        style: Theme.of(context).textTheme.bodyText1,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      '${article['publishedAt']}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xffADC5CF),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
 
@@ -58,7 +70,7 @@ Widget divider() => Padding(
       ),
     );
 
-Widget articleBuilder(articles, context) => ConditionalBuilder(
+Widget articleBuilder(articles, context , {search = false}) => ConditionalBuilder(
       condition: articles.isNotEmpty,
       builder: (context) => ListView.separated(
         physics: const BouncingScrollPhysics(),
@@ -67,7 +79,7 @@ Widget articleBuilder(articles, context) => ConditionalBuilder(
         separatorBuilder: (context, index) => divider(),
         itemCount: articles.length,
       ),
-      fallback: (context) => const Center(child: CircularProgressIndicator()),
+      fallback: (context) => search ? Container() : const Center(child: CircularProgressIndicator()),
     );
 
 Widget defaultTextField({
@@ -107,8 +119,9 @@ Widget defaultTextField({
     );
 
 void navigateTo(context, widget) {
-  Navigator.push(context, MaterialPageRoute(
-    builder: (context) => widget,
-    )
-    );
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => widget,
+      ));
 }
