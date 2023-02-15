@@ -38,7 +38,10 @@ dependencies:
   flutter_bloc: ^8.1.2
   hexcolor: ^3.0.1
   intl: ^0.18.0
+  shared_preferences: ^2.0.17
   sqflite: ^2.2.4+1
+  url_launcher: ^6.1.9
+  webview_flutter: ^4.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0

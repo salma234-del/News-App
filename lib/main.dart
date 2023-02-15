@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/layout/cubit/cubit.dart';
 import 'package:news_app/layout/news_layout.dart';
+import 'package:news_app/modules/web_view/web_view_screen.dart';
 import 'package:news_app/shared/bloc_observer.dart';
 import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/states.dart';
+import 'package:news_app/shared/network/local/cache_helper.dart';
 import 'package:news_app/shared/network/remote/dio_helper.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
   DioHelper.init();
-  runApp(const MyApp());
+  await CacheHelper.init();
+
+  bool? dark = CacheHelper.getData(key: 'dark');
+  runApp(MyApp(dark));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool? dark;
+  const MyApp(this.dark, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AppCubit(),
+    return MultiBlocProvider(
+      providers: [
+         BlocProvider(create: (context) => NewsCubit()..getBusiness(),),
+         BlocProvider(create: (context) => AppCubit()..changeAppMode(fromCach: dark),),
+      ],
       child: BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -57,6 +68,20 @@ class MyApp extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
+              inputDecorationTheme: const InputDecorationTheme(
+                prefixIconColor: Colors.black,
+                labelStyle: TextStyle(color: Colors.black),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.black,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xff3596B5),
+                  ),
+                ),
+              ),  
             ),
             darkTheme: ThemeData(
               scaffoldBackgroundColor: const Color(0xff121212),
@@ -87,12 +112,26 @@ class MyApp extends StatelessWidget {
                 bodyText1: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
-                  color:Colors.white,
+                  color: Colors.white,
+                ),
+              ),
+               inputDecorationTheme: const InputDecorationTheme(
+                prefixIconColor: Colors.white,
+                labelStyle: TextStyle(color: Colors.white),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xff3596B5),
+                  ),
                 ),
               ),
             ),
             themeMode: AppCubit.get(context).dark ? ThemeMode.dark : ThemeMode.light,
-            home: const NewsLayout(),
+            home:  NewsLayout(),
           );
         },
       ),
